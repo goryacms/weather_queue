@@ -1,4 +1,4 @@
-package ru.bellintegrator.weatherqueue.controller;
+package ru.bellintegrator.weatherqueue.entry;
 
 
 import org.springframework.stereotype.Controller;
