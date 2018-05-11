@@ -29,17 +29,7 @@ public class JmsServiceImpl implements JmsService {
         objMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         objMapper.configure(SerializationFeature.WRAP_ROOT_VALUE, true);
         objMapper.configure(DeserializationFeature.UNWRAP_ROOT_VALUE, true);
-//        return objMapper.readValue(resp, JmsView.class);
 
-        return objMapper.readerWithView(JmsView.class).withRootName("query").readValue(resp);
-        //return objMapper.reader(JmsView.class).withRootName("query").readValue(resp);
-
-
-
-
-
-        //objMapper.readerFor(JmsView.class).readValue(resp);
-
-        //return null;
+        return objMapper.readerFor(JmsView.class).withRootName("query").readValue(resp);
     }
 }
