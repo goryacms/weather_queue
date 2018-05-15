@@ -26,9 +26,7 @@ public class JmsServiceImpl implements JmsService {
     public JmsView loadByCity(String city) throws IOException {
         String resp = dao.loadByCity(city);
 
-        objMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-        objMapper.configure(SerializationFeature.WRAP_ROOT_VALUE, true);
-        objMapper.configure(DeserializationFeature.UNWRAP_ROOT_VALUE, true);
+        //objMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
         return objMapper.readerFor(JmsView.class).withRootName("query").readValue(resp);
     }
