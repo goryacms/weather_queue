@@ -182,6 +182,13 @@
                 </executions>
             </plugin>
 
+
+            <plugin>
+                <groupId>com.qulice</groupId>
+                <artifactId>qulice-maven-plugin</artifactId>
+                <version>0.17.2</version>
+            </plugin>
+
         </plugins>
     </build>
 
