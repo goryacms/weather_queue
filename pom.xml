@@ -21,10 +21,9 @@
         <encoding>UTF-8</encoding>
         <version.war.plugin>3.2.0</version.war.plugin>
         <version.wildfly.maven.plugin>1.2.1.Final</version.wildfly.maven.plugin>
+
+        <postgre.version>42.2.2</postgre.version>
     </properties>
-
-
-
 
 
     <!--Project dependencies-->
@@ -33,50 +32,37 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
-
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-tomcat</artifactId>
-            <!--<scope>provided</scope>-->
-
-            <!-- We are deploying on wildFly -->
-
-            <!--Пока не понял зачем это-->
-
-            <!--<exclusions>-->
-                <!--<exclusion>-->
-                    <!--<groupId>org.springframework.boot</groupId>-->
-                    <!--<artifactId>spring-boot-starter-tomcat</artifactId>-->
-                <!--</exclusion>-->
-            <!--</exclusions>-->
+            <scope>provided</scope>
         </dependency>
 
         <!-- Need this to compile JSP -->
         <dependency>
             <groupId>org.apache.tomcat.embed</groupId>
             <artifactId>tomcat-embed-jasper</artifactId>
+            <!--Для деплоя нужен scope = provided-->
             <!--<scope>provided</scope>-->
         </dependency>
 
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>${postgre.version}</version>
+        </dependency>
 
         <dependency>
             <groupId>org.webjars</groupId>
             <artifactId>bootstrap</artifactId>
             <version>3.3.7</version>
         </dependency>
-
         <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>servlet-api</artifactId>
             <version>2.5</version>
         </dependency>
-
-        <dependency>
-            <groupId>jstl</groupId>
-            <artifactId>jstl</artifactId>
-            <version>1.2</version>
-        </dependency>
-
+        <!--Для запроса к yahoo-->
         <dependency>
             <groupId>org.yql4j</groupId>
             <artifactId>yql4j-client</artifactId>
@@ -86,6 +72,7 @@
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
+            <scope>test</scope>
         </dependency>
 
         <dependency>
@@ -94,106 +81,126 @@
             <scope>test</scope>
         </dependency>
 
+
+
+
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-jms</artifactId>
+            <version>5.0.6.RELEASE</version>
+        </dependency>
+
+
+        <!--Все необходимые зависимости для интеграции JMS и activemq с Spring boot-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-activemq</artifactId>
+        </dependency>
+
+        <!--Встроенный ActiveMQ-->
+        <dependency>
+            <groupId>org.apache.activemq</groupId>
+            <artifactId>activemq-broker</artifactId>
+        </dependency>
+
+
+
+
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.json</groupId>
+            <artifactId>json</artifactId>
+        </dependency>
+
+
+
     </dependencies>
 
 
 
-        <!--<build>-->
-            <!--<finalName>weatherqueue</finalName>-->
-            <!--<plugins>-->
-                <!--<plugin>-->
-                    <!--<groupId>org.springframework.boot</groupId>-->
-                    <!--<artifactId>spring-boot-maven-plugin</artifactId>-->
-                <!--</plugin>-->
+    <profiles>
+        <!--Профиль для деплоя на wildfly: mvn clean wildfly:deploy -Pdep -->
+        <profile>
+            <id>dep</id>
+            <build>
+                <finalName>weatherqueue</finalName>
+                <plugins>
 
-                <!--<plugin>-->
-                    <!--<groupId>org.wildfly.plugins</groupId>-->
-                    <!--<artifactId>wildfly-maven-plugin</artifactId>-->
-                    <!--<version>1.2.1.Final</version>-->
-                    <!--<executions>-->
-                        <!--<execution>-->
-                            <!--<phase>install</phase>-->
-                            <!--<goals>-->
-                                <!--<goal>deploy</goal>-->
-                            <!--</goals>-->
-                        <!--</execution>-->
-                    <!--</executions>-->
-                <!--</plugin>-->
+                    <plugin>
+                        <groupId>org.springframework.boot</groupId>
+                        <artifactId>spring-boot-maven-plugin</artifactId>
+                    </plugin>
+                    <!--<plugin>-->
+                        <!--<artifactId>maven-war-plugin</artifactId>-->
+                        <!--<version>${version.war.plugin}</version>-->
+                        <!--<configuration>-->
+                            <!--<failOnMissingWebXml>false</failOnMissingWebXml>-->
+                        <!--</configuration>-->
+                    <!--</plugin>-->
+                    <plugin>
+                        <groupId>org.wildfly.plugins</groupId>
+                        <artifactId>wildfly-maven-plugin</artifactId>
+                        <version>${version.wildfly.maven.plugin}</version>
+                        <configuration>
+                            <hostname>localhost</hostname>
+                            <port>9990</port>
+                            <username>goryacms</username>
+                            <password>goryacms</password>
+                        </configuration>
+                    </plugin>
 
-            <!--</plugins>-->
-        <!--</build>-->
+                </plugins>
+            </build>
+        </profile>
+        <!--Профиль по умолчанию-->
 
+        <!--<profile>-->
+            <!--<id>default</id>-->
+            <!--<activation>-->
+                <!--<activeByDefault>true</activeByDefault>-->
+            <!--</activation>-->
+            <!--<build>-->
+                <!--<plugins>-->
 
-
-
-
-
-
-
-    <!--<build>-->
-        <!--<plugins>-->
-            <!--<plugin>-->
-                <!--<groupId>org.springframework.boot</groupId>-->
-                <!--<artifactId>spring-boot-maven-plugin</artifactId>-->
-            <!--</plugin>-->
-        <!--</plugins>-->
-    <!--</build>-->
-
+                    <!--<plugin>-->
+                        <!--<groupId>org.springframework.boot</groupId>-->
+                        <!--<artifactId>spring-boot-maven-plugin</artifactId>-->
+                    <!--</plugin>-->
+                    <!--<plugin>-->
+                        <!--<groupId>org.apache.maven.plugins</groupId>-->
+                        <!--<artifactId>maven-failsafe-plugin</artifactId>-->
+                        <!--<executions>-->
+                            <!--<execution>-->
+                                <!--<phase>integration-test</phase>-->
+                                <!--<goals>-->
+                                    <!--<goal>integration-test</goal>-->
+                                    <!--<goal>verify</goal>-->
+                                <!--</goals>-->
+                            <!--</execution>-->
+                        <!--</executions>-->
+                    <!--</plugin>-->
+                    <!--<plugin>-->
+                        <!--<groupId>com.qulice</groupId>-->
+                        <!--<artifactId>qulice-maven-plugin</artifactId>-->
+                        <!--<version>0.17.2</version>-->
+                    <!--</plugin>-->
+                <!--</plugins>-->
+            <!--</build>-->
+        <!--</profile>-->
+    </profiles>
 
 
     <build>
-        <finalName>weatherqueue</finalName>
         <plugins>
-            <plugin>
-                <artifactId>maven-war-plugin</artifactId>
-                <version>${version.war.plugin}</version>
-                <configuration>
-                    <failOnMissingWebXml>false</failOnMissingWebXml>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.wildfly.plugins</groupId>
-                <artifactId>wildfly-maven-plugin</artifactId>
-                <version>${version.wildfly.maven.plugin}</version>
-                <configuration>
-                    <hostname>localhost</hostname>
-                    <port>9990</port>
-                    <username>goryacms</username>
-                    <password>goryacms</password>
-                </configuration>
-            </plugin>
-
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
-
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-failsafe-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <phase>integration-test</phase>
-                        <goals>
-                            <goal>integration-test</goal>
-                            <goal>verify</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-
-
-            <plugin>
-                <groupId>com.qulice</groupId>
-                <artifactId>qulice-maven-plugin</artifactId>
-                <version>0.17.2</version>
-            </plugin>
-
         </plugins>
     </build>
-
-
-
 
 
 

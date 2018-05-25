@@ -1,18 +1,10 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: MGoriachev
-  Date: 08.05.2018
-  Time: 15:09
-  To change this template use File | Settings | File Templates.
---%>
 <%@ page import = "java.io.*,java.util.*, javax.servlet.*" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel='stylesheet' href='/webjars/bootstrap/3.3.7/css/bootstrap.min.css'/>
-
-    <script type="text/javascript" src="/webjars/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <link rel='stylesheet' href='webjars/bootstrap/3.3.7/css/bootstrap.min.css'/>
+    <script type="text/javascript" src="webjars/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
     <title>${title}</title>
 </head>
@@ -31,7 +23,7 @@
 <br><br><br>
 
 <div class="container body-content">
-    <form role="form" action="/api/jms" method="post">
+    <form role="form" action="${pageContext.request.contextPath}/jms" method="POST">
         <div class="form-group">
             <label for="city">город</label>
             <input type="city" class="form-control" id="city" name="city" placeholder="Введите город">

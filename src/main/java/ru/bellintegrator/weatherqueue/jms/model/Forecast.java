@@ -1,8 +1,15 @@
-package ru.bellintegrator.weatherqueue.jms.view;
+package ru.bellintegrator.weatherqueue.jms.model;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.Serializable;
 import java.util.Date;
 
-public class ForecastView {
+@JsonIdentityInfo(generator=ObjectIdGenerators.IntSequenceGenerator.class,property="@id", scope = Forecast.class)
+public class Forecast implements Serializable {
     private int code;
 
     private Date date;
@@ -15,7 +22,7 @@ public class ForecastView {
 
     private String text;
 
-    public ForecastView() {
+    public Forecast() {
     }
 
     public int getCode() {
@@ -64,5 +71,20 @@ public class ForecastView {
 
     public void setText(String text) {
         this.text = text;
+    }
+
+
+    @Override
+    public String toString() {
+        JSONObject jsonInfo = new JSONObject();
+        try {
+            jsonInfo.put("code", this.code);
+            jsonInfo.put("date", this.date);
+            jsonInfo.put("day", this.day);
+            jsonInfo.put("high", this.high);
+            jsonInfo.put("low", this.low);
+            jsonInfo.put("text", this.text);
+        } catch (JSONException e1) {}
+        return jsonInfo.toString();
     }
 }

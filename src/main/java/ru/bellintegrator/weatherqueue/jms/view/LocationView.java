@@ -1,8 +1,5 @@
 package ru.bellintegrator.weatherqueue.jms.view;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-
-@JsonInclude(JsonInclude.Include.NON_NULL)
 public class LocationView {
     private String city;
 
@@ -14,6 +11,9 @@ public class LocationView {
         this.city = city;
         this.country = country;
         this.region = region;
+    }
+
+    public LocationView() {
     }
 
     public String getCity() {

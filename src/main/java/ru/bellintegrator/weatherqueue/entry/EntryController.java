@@ -10,6 +10,6 @@ public class EntryController {
     @RequestMapping(value = "/")
     public String welcome(Model model) {
         model.addAttribute("title", "Погодный брокер");
-        return "index";
+        return "/index";
     }
 }

@@ -6,22 +6,22 @@ import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 import com.fasterxml.jackson.databind.node.IntNode;
+import ru.bellintegrator.weatherqueue.jms.model.Forecast;
+import ru.bellintegrator.weatherqueue.jms.model.Location;
+import ru.bellintegrator.weatherqueue.jms.model.Wind;
 import ru.bellintegrator.weatherqueue.util.Parsing;
 
 import java.io.IOException;
 import java.util.*;
 
-public class JmsDeserializer extends StdDeserializer<JmsView> {
-    private JmsView view;
+public class JmsDeserializer extends StdDeserializer<WeatherView> {
+    private WeatherView view;
 
-    private LocationView locationView;
+    private LocationView location;
 
-    private WindView windView;
-
-    private AtmosphereView atmosphereView;
+    private WindView wind;
 
     private List<ForecastView> setForecast = new ArrayList<>();
-    private ForecastView forecastView;
 
     public JmsDeserializer(){
         this(null);
@@ -30,23 +30,20 @@ public class JmsDeserializer extends StdDeserializer<JmsView> {
         super(vc);
     }
     @Override
-    public JmsView deserialize(JsonParser jp, DeserializationContext ctxt)
+    public WeatherView deserialize(JsonParser jp, DeserializationContext ctxt)
             throws IOException, JsonProcessingException {
 
-        // Определение нод
+        // Определение узлов
         JsonNode node    = jp.getCodec().readTree(jp);
         JsonNode channel = node.path("results").path("channel");
 
         JsonNode locationNode   = channel.path("location");
         JsonNode windNode       = channel.path("wind");
-        JsonNode atmosphereNode = channel.path("atmosphere");
+
         //JsonNode forecastNode   = channel.path("item").path("forecast");
         JsonNode forecastNode = channel.path("item").get("forecast");
 
-
-
-
-        // Получить объект JmaView
+        // Получить объект JmsView
         view = getView(node);
 
         // Получить объект locationView
@@ -55,30 +52,26 @@ public class JmsDeserializer extends StdDeserializer<JmsView> {
         // Получить объект windView
         setWindView(windNode);
 
-        // Получить объект atmosphereView
-        setAtmosphereView(atmosphereNode);
-
         // Получить коллекцию объектов forecastView
         if (forecastNode.size() > 0) {
             setForecastCollection(forecastNode);
         }
 
 
-        view.setLocation(locationView);
-        view.setWind(windView);
-        view.setAtmosphere(atmosphereView);
+        view.setLocation(location);
+        view.setWind(wind);
         view.setForecast(setForecast);
 
         return view;
     }
 
 
-    private JmsView getView(JsonNode node) {
+    private WeatherView getView(JsonNode node) {
         int cnt = (Integer) ((IntNode) node.get("count")).numberValue();
         String itemCreated = node.get("created").asText();
         String lng = node.get("lang").asText();
 
-        return new JmsView(cnt, itemCreated, lng);
+        return new WeatherView(cnt, itemCreated, lng);
     }
 
     private void setLocationView(JsonNode node){
@@ -86,7 +79,7 @@ public class JmsDeserializer extends StdDeserializer<JmsView> {
         String country = node.get("country").asText();
         String region = node.get("region").asText();
 
-        locationView =  new LocationView(city, country, region);
+        location =  new LocationView(city, country, region);
     }
 
     private void setWindView(JsonNode node) {
@@ -94,16 +87,7 @@ public class JmsDeserializer extends StdDeserializer<JmsView> {
         int direction = (Integer) Integer.parseInt(node.get("direction").asText());
         int speed = (Integer) Integer.parseInt(node.get("speed").asText());
 
-        windView = new WindView(chill, direction, speed);
-    }
-
-    private void setAtmosphereView(JsonNode node) {
-        int humidity = Integer.parseInt(node.get("humidity").asText());
-        Double pressure = Double.parseDouble(node.get("pressure").asText());
-        int rising = Integer.parseInt(node.get("rising").asText());
-        Double visibility = Double.parseDouble(node.get("visibility").asText());
-
-        atmosphereView = new AtmosphereView(humidity, pressure, rising, visibility);
+        wind = new WindView(chill, direction, speed);
     }
 
     private void setForecastCollection(JsonNode node) {
@@ -117,16 +101,16 @@ public class JmsDeserializer extends StdDeserializer<JmsView> {
             int low = Integer.parseInt(forecastNode.get("low").asText());
             String text = forecastNode.get("text").asText();
 
-            forecastView = new ForecastView();
+            ForecastView forecast = new ForecastView();
 
-            forecastView.setCode(code);
-            forecastView.setDate(outDate);
-            forecastView.setDay(day);
-            forecastView.setHigh(high);
-            forecastView.setLow(low);
-            forecastView.setText(text);
+            forecast.setCode(code);
+            forecast.setDate(outDate);
+            forecast.setDay(day);
+            forecast.setHigh(high);
+            forecast.setLow(low);
+            forecast.setText(text);
 
-            setForecast.add(forecastView);
+            setForecast.add(forecast);
         }
     }
 

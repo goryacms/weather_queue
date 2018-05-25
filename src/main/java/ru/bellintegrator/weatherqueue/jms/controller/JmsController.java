@@ -1,17 +1,24 @@
 package ru.bellintegrator.weatherqueue.jms.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
-import ru.bellintegrator.weatherqueue.jms.service.JmsService;
-import ru.bellintegrator.weatherqueue.jms.view.JmsView;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.Message;
+import org.springframework.messaging.MessageHeaders;
+import org.springframework.stereotype.Controller;
+
+
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+
+import ru.bellintegrator.weatherqueue.jms.model.Location;
+import ru.bellintegrator.weatherqueue.jms.service.JmsService;
+import ru.bellintegrator.weatherqueue.jms.model.Weather;
 
 import java.io.IOException;
 
-
-
-@RestController
-@RequestMapping(value = "/api")
+@Controller
 public class JmsController {
     private JmsService jmsService;
 
@@ -20,18 +27,24 @@ public class JmsController {
         this.jmsService = jmsService;
     }
 
-
     @RequestMapping(value = "/jms", method = RequestMethod.POST)
-    public JmsView weatherData(@RequestBody String city) throws IOException {
-        JmsView view = jmsService.loadByCity(city);
+    public String weatherData(Model model, @RequestBody String city) throws IOException {
+        // Получить ответ с yahoo.weather.com
+        Location weatherInCity = jmsService.loadByCity(city);
 
-        return view;
+
+        // Сформировать JMS
+        jmsService.sendMessage(weatherInCity);
+
+
+
+
+
+
+
+        //Weather weather2 = new Weather();
+        //jmsService.receiveMessage(weather2);
+
+        return "redirect:/";
     }
-
-
-
-
-
-
-
 }

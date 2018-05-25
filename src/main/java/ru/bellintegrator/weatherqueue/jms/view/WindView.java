@@ -13,6 +13,9 @@ public class WindView {
         this.speed = speed;
     }
 
+    public WindView() {
+    }
+
     public int getChill() {
         return chill;
     }

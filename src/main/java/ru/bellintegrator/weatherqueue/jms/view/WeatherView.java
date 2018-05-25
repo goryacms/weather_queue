@@ -2,6 +2,7 @@ package ru.bellintegrator.weatherqueue.jms.view;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import ru.bellintegrator.weatherqueue.jms.model.Wind;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,7 +11,7 @@ import java.util.List;
 //@JsonIgnoreProperties(ignoreUnknown=true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonDeserialize(using = JmsDeserializer.class)
-public class JmsView {
+public class WeatherView {
     private int count;
 
     private String created;
@@ -21,14 +22,12 @@ public class JmsView {
 
     private WindView wind;
 
-    private AtmosphereView atmosphere;
+    private List<ForecastView> forecast = new ArrayList<>();
 
-    private List<ForecastView> forecast = new ArrayList<ForecastView>();
-
-    public JmsView() {
+    public WeatherView() {
     }
 
-    public JmsView(int count, String created, String lang ) {
+    public WeatherView(int count, String created, String lang ) {
         this.count = count;
         this.created = created;
         this.lang = lang;
@@ -75,15 +74,6 @@ public class JmsView {
         this.wind = wind;
     }
 
-    public AtmosphereView getAtmosphere() {
-        return atmosphere;
-    }
-
-    public void setAtmosphere(AtmosphereView atmosphere) {
-        this.atmosphere = atmosphere;
-    }
-
-
     public List<ForecastView> getForecast() {
         return forecast;
     }
@@ -92,4 +82,16 @@ public class JmsView {
         this.forecast = forecast;
     }
 
+
+    @Override
+    public String toString() {
+        return "JmsView{" +
+                "count=" + count +
+                ", created='" + created + '\'' +
+                ", lang='" + lang + '\'' +
+                ", location=" + location +
+                ", wind=" + wind +
+                ", forecast=" + forecast +
+                '}';
+    }
 }

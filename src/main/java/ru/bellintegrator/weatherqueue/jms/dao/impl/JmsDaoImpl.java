@@ -22,6 +22,11 @@ public class JmsDaoImpl implements JmsDao {
             e.printStackTrace();
         }
 
-        return result.getContentAsString();
+        String returnResult = null;
+        if (result != null) {
+            returnResult = result.getContentAsString();
+        }
+
+        return returnResult;
     }
 }
