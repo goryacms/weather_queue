@@ -23,6 +23,10 @@
         <version.wildfly.maven.plugin>1.2.1.Final</version.wildfly.maven.plugin>
 
         <postgre.version>42.2.2</postgre.version>
+
+        <systest.package>**/ru/bellintegrator/weatherqueue/**</systest.package>
+
+        <version.org.jboss.xnio>3.2.2.Final</version.org.jboss.xnio>
     </properties>
 
 
@@ -45,6 +49,7 @@
             <!--Для деплоя нужен scope = provided-->
             <!--<scope>provided</scope>-->
         </dependency>
+
 
         <dependency>
             <groupId>org.postgresql</groupId>
@@ -69,20 +74,6 @@
             <version>0.9.5</version>
         </dependency>
 
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
-            <scope>test</scope>
-        </dependency>
-
-
-
 
         <dependency>
             <groupId>org.springframework</groupId>
@@ -104,8 +95,6 @@
         </dependency>
 
 
-
-
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
@@ -116,7 +105,17 @@
         </dependency>
 
 
-
+        <!--Зависимости для тестов-->
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
 
@@ -133,13 +132,6 @@
                         <groupId>org.springframework.boot</groupId>
                         <artifactId>spring-boot-maven-plugin</artifactId>
                     </plugin>
-                    <!--<plugin>-->
-                        <!--<artifactId>maven-war-plugin</artifactId>-->
-                        <!--<version>${version.war.plugin}</version>-->
-                        <!--<configuration>-->
-                            <!--<failOnMissingWebXml>false</failOnMissingWebXml>-->
-                        <!--</configuration>-->
-                    <!--</plugin>-->
                     <plugin>
                         <groupId>org.wildfly.plugins</groupId>
                         <artifactId>wildfly-maven-plugin</artifactId>
@@ -155,43 +147,73 @@
                 </plugins>
             </build>
         </profile>
+
+        <!--Профиль для тестов. Запуск: mvn -P=systest test-->
+        <profile>
+            <id>systest</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <version>2.5</version>
+                        <configuration>
+                            <excludes>
+                                <exclude>**/*$*</exclude>
+                            </excludes>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+
         <!--Профиль по умолчанию-->
 
-        <!--<profile>-->
-            <!--<id>default</id>-->
-            <!--<activation>-->
-                <!--<activeByDefault>true</activeByDefault>-->
-            <!--</activation>-->
-            <!--<build>-->
-                <!--<plugins>-->
+        <profile>
+            <id>default</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <build>
+                <plugins>
 
-                    <!--<plugin>-->
-                        <!--<groupId>org.springframework.boot</groupId>-->
-                        <!--<artifactId>spring-boot-maven-plugin</artifactId>-->
-                    <!--</plugin>-->
-                    <!--<plugin>-->
-                        <!--<groupId>org.apache.maven.plugins</groupId>-->
-                        <!--<artifactId>maven-failsafe-plugin</artifactId>-->
-                        <!--<executions>-->
-                            <!--<execution>-->
-                                <!--<phase>integration-test</phase>-->
-                                <!--<goals>-->
-                                    <!--<goal>integration-test</goal>-->
-                                    <!--<goal>verify</goal>-->
-                                <!--</goals>-->
-                            <!--</execution>-->
-                        <!--</executions>-->
-                    <!--</plugin>-->
-                    <!--<plugin>-->
-                        <!--<groupId>com.qulice</groupId>-->
-                        <!--<artifactId>qulice-maven-plugin</artifactId>-->
-                        <!--<version>0.17.2</version>-->
-                    <!--</plugin>-->
-                <!--</plugins>-->
-            <!--</build>-->
-        <!--</profile>-->
+                    <plugin>
+                        <groupId>org.springframework.boot</groupId>
+                        <artifactId>spring-boot-maven-plugin</artifactId>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-failsafe-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <phase>integration-test</phase>
+                                <goals>
+                                    <goal>integration-test</goal>
+                                    <goal>verify</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>com.qulice</groupId>
+                        <artifactId>qulice-maven-plugin</artifactId>
+                        <version>0.17.2</version>
+                        <configuration>
+                            <license>file:${basedir}/LICENSE.txt</license>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <goals>
+                                    <goal>check</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
     </profiles>
-
 
     <build>
         <plugins>
@@ -199,9 +221,18 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>2.21.0</version>
+                <configuration>
+                    <excludes>
+                        <exclude>${systest.package}</exclude>
+                        <exclude>**/*$*</exclude>
+                    </excludes>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
-
-
 
 </project>
