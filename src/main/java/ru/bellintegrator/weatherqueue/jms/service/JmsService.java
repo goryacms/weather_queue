@@ -1,15 +1,23 @@
 package ru.bellintegrator.weatherqueue.jms.service;
 
-import org.springframework.messaging.Message;
-import org.springframework.messaging.MessageHeaders;
 import ru.bellintegrator.weatherqueue.jms.model.Location;
-import ru.bellintegrator.weatherqueue.jms.model.Weather;
-
-import javax.jms.Session;
 import java.io.IOException;
 
+/**
+ * Бизнес-логика для работы с сообщениями
+ */
 public interface JmsService {
+    /**
+     * Загрузка информации о погоде по названию города
+     * @param city
+     * @return
+     * @throws IOException
+     */
     Location loadByCity(String city) throws IOException;
 
+    /**
+     * Отправка сообщения в topic
+     * @param weatherInCity
+     */
     void sendMessage(Location weatherInCity);
 }
