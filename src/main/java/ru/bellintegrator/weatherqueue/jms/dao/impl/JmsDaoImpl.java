@@ -4,6 +4,9 @@ import org.springframework.stereotype.Repository;
 import org.yql4j.*;
 import ru.bellintegrator.weatherqueue.jms.dao.JmsDao;
 
+/**
+ * {@inheritDoc}
+ */
 @Repository
 public class JmsDaoImpl implements JmsDao {
 
