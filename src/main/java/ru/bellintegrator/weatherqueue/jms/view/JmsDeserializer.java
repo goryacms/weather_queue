@@ -1,18 +1,16 @@
 package ru.bellintegrator.weatherqueue.jms.view;
 
 import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
-import com.fasterxml.jackson.databind.node.IntNode;
-import ru.bellintegrator.weatherqueue.jms.model.Forecast;
-import ru.bellintegrator.weatherqueue.jms.model.Location;
-import ru.bellintegrator.weatherqueue.jms.model.Wind;
 import ru.bellintegrator.weatherqueue.util.Parsing;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
 
 public class JmsDeserializer extends StdDeserializer<WeatherView> {
     private WeatherView view;
@@ -31,7 +29,7 @@ public class JmsDeserializer extends StdDeserializer<WeatherView> {
     }
     @Override
     public WeatherView deserialize(JsonParser jp, DeserializationContext ctxt)
-            throws IOException, JsonProcessingException {
+            throws IOException {
 
         // Определение узлов
         JsonNode node    = jp.getCodec().readTree(jp);
@@ -67,7 +65,7 @@ public class JmsDeserializer extends StdDeserializer<WeatherView> {
 
 
     private WeatherView getView(JsonNode node) {
-        int cnt = (Integer) ((IntNode) node.get("count")).numberValue();
+        int cnt = (Integer) node.get("count").numberValue();
         String itemCreated = node.get("created").asText();
         String lng = node.get("lang").asText();
 
@@ -83,9 +81,9 @@ public class JmsDeserializer extends StdDeserializer<WeatherView> {
     }
 
     private void setWindView(JsonNode node) {
-        int chill = (Integer) Integer.parseInt(node.get("chill").asText());
-        int direction = (Integer) Integer.parseInt(node.get("direction").asText());
-        int speed = (Integer) Integer.parseInt(node.get("speed").asText());
+        int chill = Integer.parseInt(node.get("chill").asText());
+        int direction = Integer.parseInt(node.get("direction").asText());
+        int speed = Integer.parseInt(node.get("speed").asText());
 
         wind = new WindView(chill, direction, speed);
     }
