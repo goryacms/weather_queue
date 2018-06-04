@@ -1,8 +1,8 @@
 package ru.bellintegrator.weatherqueue.jms.dao;
 
 
-import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +11,9 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import ru.bellintegrator.weatherqueue.Application;
-import ru.bellintegrator.weatherqueue.jms.dao.impl.JmsDaoImpl;
+import ru.bellintegrator.weatherqueue.jms.view.WeatherView;
+
+import java.io.IOException;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = {Application.class})
@@ -28,40 +30,7 @@ public class JmsDaoTest {
 
         String res = jmsDao.loadByCity(city);
 
-        //System.out.println(res.readerFor());
-
+        Assert.assertFalse(res.isEmpty());
     }
-
-
-    public static void main(String[] args) {
-        String city = "Penza";
-        JmsDao jmsDao = new JmsDaoImpl();
-
-        String resp = jmsDao.loadByCity(city);
-
-        System.out.println(resp);
-
-        //JsonParser jsonParser = new JsonParser();
-        //JsonElement element = jsonParser.parse(resp);
-
-        ObjectMapper objMapper = new ObjectMapper();
-        objMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-
-//        try {
-//            JmsView view = objMapper.readValue(resp, JmsView.class);
-//            System.out.println(view.lang);
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-        //JmsView cls = res.readerFor(JmsView.class);
-
-        Object ob = new Object();
-
-
-
-
-    }
-
-
 
 }
