@@ -1,18 +1,15 @@
 package ru.bellintegrator.weatherqueue.jms.model;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.io.Serializable;
 
-@JsonIdentityInfo(generator=ObjectIdGenerators.IntSequenceGenerator.class,property="@id", scope = Location.class)
-public class Location implements  Serializable {
-
-
-
+@JsonIdentityInfo(generator=ObjectIdGenerators.IntSequenceGenerator.class, property="@id", scope = Location.class)
+@JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
+public class Location implements Serializable {
     private String city;
 
     private String country;
@@ -22,6 +19,7 @@ public class Location implements  Serializable {
     private Weather weather;
 
     public Location() {
+
     }
 
     public String getCity() {
@@ -56,7 +54,6 @@ public class Location implements  Serializable {
         this.weather = weather;
     }
 
-//
     @Override
     public String toString(){
         JSONObject jsonInfo = new JSONObject();
@@ -68,5 +65,4 @@ public class Location implements  Serializable {
         } catch (JSONException e1) {}
         return jsonInfo.toString();
     }
-
 }

@@ -1,13 +1,14 @@
 package ru.bellintegrator.weatherqueue.jms.model;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.io.Serializable;
 
 @JsonIdentityInfo(generator=ObjectIdGenerators.IntSequenceGenerator.class,property="@id", scope = Wind.class)
+@JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
 public class Wind implements Serializable {
     private int chill;
 
@@ -16,6 +17,7 @@ public class Wind implements Serializable {
     private int speed;
 
     public Wind() {
+
     }
 
     public int getChill() {
