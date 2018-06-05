@@ -3,6 +3,7 @@
 Деплой на сервер приложения 
  - 
  В качестве сервера приложений используется [WildFly 11. ](http://wildfly.org/downloads/)
+ Для запуска использовать standalone.bat (standalone.sh если Linux) из папки bin.
  Использовать последовательность команд в командной строке для формирования и отправки war-файла  
        
     mvn clean wildfly:deploy -Pdep
@@ -29,3 +30,13 @@ Connection
 
 Используя вкладку Deployments, добавить [postgresql-42.2.2.jar или другую версию](https://jdbc.postgresql.org/download.html)
 
+ActiveMQ
+ - 
+В качестве message broker используется [ActiveMQ.](http://activemq.apache.org/download-archives.html)
+Для запуска использовать activemq.bat из папки bin.
+
+ Менеджер управления ActiveMQ: 
+ 
+     http://localhost:8161/
+     
+Логин и пароль по умолчанию **admin**
